@@ -17,8 +17,7 @@ if (WIN32)
     )
 endif ()
 
-get_target_property(SPIRV_HEADERS_INCLUDE_DIRS SPIRV-Headers::SPIRV-Headers INTERFACE_INCLUDE_DIRECTORIES)
-add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/imported.json COMMAND import_spv_defs ${CMAKE_CURRENT_BINARY_DIR}/imported.json ${PROJECT_SOURCE_DIR}/include/shady/spv_imports.json ${SPIRV_HEADERS_INCLUDE_DIRS} DEPENDS import_spv_defs SPIRV-Headers::SPIRV-Headers ${PROJECT_SOURCE_DIR}/include/shady/spv_imports.json VERBATIM)
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/imported.json COMMAND import_spv_defs ${CMAKE_CURRENT_BINARY_DIR}/imported.json ${PROJECT_SOURCE_DIR}/include/shady/spv_imports.json ${SPIRV_HEADER_INCLUDE_DIR} DEPENDS import_spv_defs SPIRV-Headers::SPIRV-Headers ${PROJECT_SOURCE_DIR}/include/shady/spv_imports.json VERBATIM)
 add_custom_target(do_import_spv_defs DEPENDS import_spv_defs ${CMAKE_CURRENT_BINARY_DIR}/imported.json)
 
 set(SHADY_IMPORTED_JSON_PATH ${CMAKE_CURRENT_BINARY_DIR}/imported.json CACHE INTERNAL "path to imported.json")
@@ -28,8 +27,6 @@ function(add_generated_file)
     set(GENERATOR_NAME generator_${F_FILE_NAME})
     add_executable(${GENERATOR_NAME} ${F_SOURCES} ${PROJECT_SOURCE_DIR}/src/shady/generator/generator_main.c)
     target_link_libraries(${GENERATOR_NAME} generator_common)
-
-    get_target_property(SPIRV_HEADERS_INCLUDE_DIRS SPIRV-Headers::SPIRV-Headers INTERFACE_INCLUDE_DIRECTORIES)
 
     if ("${F_TARGET_NAME}" STREQUAL "")
         set(F_TARGET_NAME generate_${F_FILE_NAME})

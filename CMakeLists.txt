@@ -22,7 +22,10 @@ if (WIN32)
   set(BUILD_SHARED_LIBS OFF)
 endif()
 
-add_subdirectory(SPIRV-Headers)
+if (NOT DEFINED SPIRV_HEADER_INCLUDE_DIR)
+    add_subdirectory(SPIRV-Headers)
+    get_target_property(SPIRV_HEADER_INCLUDE_DIR SPIRV-Headers::SPIRV-Headers INTERFACE_INCLUDE_DIRECTORIES)
+endif()
 
 if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.24" AND ${SHADY_USE_FETCHCONTENT})
     FetchContent_Declare(
